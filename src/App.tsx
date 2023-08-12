@@ -1,42 +1,34 @@
 import React from "react";
-import TableProducts from "./TableProducts.tsx";
 
 
 const App = () => {
 
-    const [products, setProducts] = React.useState<"tablet" | "smartphone" | "notebook" | null>(null);
-
-    React.useEffect(() => {
-        const product = localStorage.getItem("product")
-        if (product != null) {
-            setProducts(product as "tablet" | "smartphone" | "notebook")
-        }
-    }, [])
-
-    React.useEffect(() => {
-        if (products != null) {
-            localStorage.setItem("product", products)
-        }
-    }, [products])
-
-    function handleClick(product: "tablet" | "smartphone" | "notebook") {
-        setProducts(product)
+    const [comentarios, setComentarios] = React.useState<string[]>([]);
+    const [input, setInput] = React.useState<string>("");
+    const inputElement = React.useRef<HTMLInputElement>(null)
+    function handleClick() {
+        setComentarios([...comentarios, input])
+        setInput("")
+        inputElement.current?.focus()
     }
 
     return <>
-        <h2>Preferência: {localStorage.getItem("product")}</h2>
-        <div style={{
-            display: "flex",
-            justifyContent: "space-around",
-            alignItems: "center",
-            gap: "8px",
-        }}>
-            <button onClick={() => handleClick("tablet")}>Tablet</button>
-            <button onClick={() => handleClick("smartphone")}>Smartphone</button>
-            <button onClick={() => handleClick("notebook")}>Notebook</button>
-        </div>
-        {products && <TableProducts product={products}/>}
-    </>;
+        <ul>
+            {comentarios.map((comentario) => {
+                return <li key={comentario} style={{
+                    display: "flex",
+                    gap: "10px",
+                }}>
+                    <p>{comentario}</p>
+                    <button onClick={() => setComentarios(comentarios.filter((c) => c !== comentario))}>Remover</button>
+                </li>
+            })}
+            <input ref={inputElement} type="text" value={input} onChange={({target}) => setInput(target.value)}/>
+            <button style={{
+                marginTop: "10px"
+            }} onClick={handleClick}>Enviar</button>
+        </ul>
+    </>
 };
 
 export default App
