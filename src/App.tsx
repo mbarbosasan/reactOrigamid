@@ -1,39 +1,41 @@
 import React from "react";
-import TableProducts, {Product} from "./TableProducts.tsx";
+import TableProducts from "./TableProducts.tsx";
 
 
 const App = () => {
 
-    const [products, setProducts] = React.useState<Product | null>(null);
-    const [loading, setLoading] = React.useState<boolean | null>(null);
-    const [ativo, setAtivo] = React.useState(false);
+    const [products, setProducts] = React.useState<"tablet" | "smartphone" | "notebook" | null>(null);
 
     React.useEffect(() => {
-        getProducts("tablet")
+        const product = localStorage.getItem("product")
+        if (product != null) {
+            setProducts(product as "tablet" | "smartphone" | "notebook")
+        }
     }, [])
 
-    async function getProducts(product: "tablet" | "smartphone" | "notebook") {
-        setLoading(true)
-        const response = await fetch("https://ranekapi.origamid.dev/json/api/produto/" + product)
-        const json: Product = await response.json();
-        setProducts(json)
-        setLoading(false)
+    React.useEffect(() => {
+        if (products != null) {
+            localStorage.setItem("product", products)
+        }
+    }, [products])
+
+    function handleClick(product: "tablet" | "smartphone" | "notebook") {
+        setProducts(product)
     }
 
     return <>
-        <button style={{marginBottom: "8px"}} onClick={() => setAtivo(!ativo)}>{ativo ? "Ativar" : "Desativar"}</button>
+        <h2>Preferência: {localStorage.getItem("product")}</h2>
         <div style={{
             display: "flex",
             justifyContent: "space-around",
             alignItems: "center",
             gap: "8px",
         }}>
-            <button onClick={() => getProducts("tablet")}>Tablet</button>
-            <button onClick={() => getProducts("smartphone")}>Smartphone</button>
-            <button onClick={() => getProducts("notebook")}>Notebook</button>
+            <button onClick={() => handleClick("tablet")}>Tablet</button>
+            <button onClick={() => handleClick("smartphone")}>Smartphone</button>
+            <button onClick={() => handleClick("notebook")}>Notebook</button>
         </div>
-        {loading && <p>Carregando...</p>}
-        {!loading && products && <TableProducts product={products}/>}
+        {products && <TableProducts product={products}/>}
     </>;
 };
 
