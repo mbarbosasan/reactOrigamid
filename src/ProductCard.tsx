@@ -1,4 +1,4 @@
-const ProductCard = ({nome}: {nome: string}, ...props: string[]) => {
+const ProductCard = ({nome}: {nome?: string}, ...props: string[]) => {
     return <div>
         <p>{nome}</p>
         <ul>

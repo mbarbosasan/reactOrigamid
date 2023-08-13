@@ -1,13 +1,13 @@
-import React from "react";
+import {UserContext} from "./UserContext.tsx";
+import {GlobalStorage} from "./GlobalContext.tsx";
+import {ProductList} from "./ProductList.tsx";
 
 const App = () => {
-    const [contar, setContar] = React.useState(0)
-
-    const handleClick = React.useCallback(() => {
-        setContar((contar) => contar + 1)
-    }, [])
+    console.log(UserContext)
     return <>
-        <button onClick={handleClick}>{contar}</button>
+        <GlobalStorage>
+            <ProductList/>
+        </GlobalStorage>
     </>
 };
 

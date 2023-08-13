@@ -1,4 +1,4 @@
-const Input = ({label, id, type, ...props}: {label: string, id: string, type: string, props?: any}) => {
+const Input = ({label, id, type, ...props}: {label: string, id: string, type: string}) => {
     return (
         <>
         <label htmlFor={id}>{label}</label>
